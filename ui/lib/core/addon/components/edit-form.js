@@ -15,7 +15,10 @@ export default Component.extend({
   deleteSuccessMessage: 'Deleted!',
   deleteButtonText: 'Delete',
   saveButtonText: 'Save',
+  cancelButtonText: 'Cancel',
   cancelLink: null,
+  flashEnabled: true,
+  includeBox: true,
 
   /*
    * @param Function
@@ -42,7 +45,9 @@ export default Component.extend({
       }
       return;
     }
-    this.get('flashMessages').success(this.get(messageKey));
+    if (this.flashEnabled) {
+      this.get('flashMessages').success(this.get(messageKey));
+    }
     if (this.callOnSaveAfterRender) {
       next(() => {
         this.get('onSave')({ saveType: method, model });
