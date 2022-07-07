@@ -34,6 +34,7 @@ const (
 
 var (
 	HashTypeMap = map[string]HashType{
+		"none":     0,
 		"sha1":     HashTypeSHA1,
 		"sha2-224": HashTypeSHA2224,
 		"sha2-256": HashTypeSHA2256,

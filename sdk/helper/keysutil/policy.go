@@ -1141,6 +1141,8 @@ func (p *Policy) Sign(ver int, context, input []byte, hashAlgorithm HashType, si
 
 		var algo crypto.Hash
 		switch hashAlgorithm {
+		case 0:
+			algo = crypto.Hash(0)
 		case HashTypeSHA1:
 			algo = crypto.SHA1
 		case HashTypeSHA2224:
@@ -1320,6 +1322,8 @@ func (p *Policy) VerifySignature(context, input []byte, hashAlgorithm HashType, 
 
 		var algo crypto.Hash
 		switch hashAlgorithm {
+		case 0:
+			algo = crypto.Hash(0)
 		case HashTypeSHA1:
 			algo = crypto.SHA1
 		case HashTypeSHA2224:
