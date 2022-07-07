@@ -316,6 +316,12 @@ func (b *backend) pathSignWrite(ctx context.Context, req *logical.Request, d *fr
 	if err != nil {
 		return logical.ErrorResponse(err.Error()), logical.ErrInvalidRequest
 	}
+	// crypto.Hash(0) can only be used when input is prehashed and the signature algorithm is pkcs1v15
+	if hashAlgorithm == 0 {
+		if !prehashed || sigAlgorithm != "pkcs1v15" {
+			return logical.ErrorResponse(fmt.Sprintf("invalid hash algorithm %q", hashAlgorithmStr)), logical.ErrInvalidRequest
+		}
+	}
 
 	// Get the policy
 	p, _, err := b.GetPolicy(ctx, keysutil.PolicyRequest{
@@ -542,6 +548,12 @@ func (b *backend) pathVerifyWrite(ctx context.Context, req *logical.Request, d *
 	saltLength, err := b.getSaltLength(d)
 	if err != nil {
 		return logical.ErrorResponse(err.Error()), logical.ErrInvalidRequest
+	}
+	// crypto.Hash(0) can only be used when input is prehashed and the signature algorithm is pkcs1v15
+	if hashAlgorithm == 0 {
+		if !prehashed || sigAlgorithm != "pkcs1v15" {
+			return logical.ErrorResponse(fmt.Sprintf("invalid hash algorithm %q", hashAlgorithmStr)), logical.ErrInvalidRequest
+		}
 	}
 
 	// Get the policy

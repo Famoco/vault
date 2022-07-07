@@ -35,6 +35,7 @@ const (
 
 var (
 	HashTypeMap = map[string]HashType{
+		"none":     0,
 		"sha1":     HashTypeSHA1,
 		"sha2-224": HashTypeSHA2224,
 		"sha2-256": HashTypeSHA2256,
@@ -59,6 +60,7 @@ var (
 	}
 
 	CryptoHashMap = map[HashType]crypto.Hash{
+		0:               crypto.Hash(0),
 		HashTypeSHA1:    crypto.SHA1,
 		HashTypeSHA2224: crypto.SHA224,
 		HashTypeSHA2256: crypto.SHA256,
