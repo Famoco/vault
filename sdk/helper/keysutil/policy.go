@@ -1239,6 +1239,12 @@ func (p *Policy) SignWithOptions(ver int, context, input []byte, options *Signin
 			if err != nil {
 				return nil, err
 			}
+		case "oaep":
+			var emptyLabel []byte
+			sig, err = EncryptOAEP(sha256.New(), rand.Reader, key, input, emptyLabel)
+			if err != nil {
+				return nil, err
+			}
 		default:
 			return nil, errutil.InternalError{Err: fmt.Sprintf("unsupported rsa signature algorithm %s", sigAlgorithm)}
 		}
@@ -1437,6 +1443,13 @@ func (p *Policy) VerifySignatureWithOptions(context, input []byte, sig string, o
 				publicKey = &keyEntry.RSAKey.PublicKey
 			}
 			err = rsa.VerifyPKCS1v15(publicKey, algo, input, sigBytes)
+		case "oaep":
+			publicKey := keyEntry.RSAPublicKey
+			if !keyEntry.IsPrivateKeyMissing() {
+				publicKey = &keyEntry.RSAKey.PublicKey
+			}
+			var emptyLabel []byte
+			_, err = DecryptOAEP(sha256.New(), rand.Reader, publicKey, input, emptyLabel)
 		default:
 			return false, errutil.InternalError{Err: fmt.Sprintf("unsupported rsa signature algorithm %s", sigAlgorithm)}
 		}
